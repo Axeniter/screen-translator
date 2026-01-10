@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net.Http;
+using Translator.Model;
 
 namespace Translator.Service
 {
@@ -100,6 +101,25 @@ namespace Translator.Service
         public string GetLanguageCode(string language)
         {
             return _languages[language];
+        }
+
+        public List<OcrLanguage> GetAllLanguagesInfo()
+        {
+            var result = new List<OcrLanguage>();
+
+            foreach (var lang in _languages)
+            {
+                result.Add(new OcrLanguage { Code=lang.Value, Name=lang.Key, IsInstalled=IsLanguageInstalled(lang.Key) });
+            }
+            return result;
+        }
+
+        public List<string> GetAllLanguagesNames()
+        {
+            var result = new List<string>();
+
+            foreach (var lang in _languages.Keys) result.Add(lang);
+            return result;
         }
     }
 }
