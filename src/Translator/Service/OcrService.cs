@@ -15,16 +15,16 @@ namespace Translator.Service
             _tessDataPath = Path.Combine(appData, "Translator", "tessdata");
             if (!Directory.Exists(_tessDataPath)) Directory.CreateDirectory(_tessDataPath);
         }
-        public string RecognizeImage(Bitmap image, string language)
+        public string RecognizeImage(Bitmap image, string languageCode)
         {
-            if (!_engines.ContainsKey(language))
+            if (!_engines.ContainsKey(languageCode))
             {
-                var engine = new TesseractEngine(_tessDataPath, language, EngineMode.Default);
-                _engines[language] = engine;
+                var engine = new TesseractEngine(_tessDataPath, languageCode, EngineMode.Default);
+                _engines[languageCode] = engine;
             }
 
             using (var pix = PixConverter.ToPix(image))
-            using (var page = _engines[language].Process(pix))
+            using (var page = _engines[languageCode].Process(pix))
             {
                 return page.GetText();
             }
