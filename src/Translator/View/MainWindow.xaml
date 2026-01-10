@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Translator"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="Screen Translator" Height="450" Width="800">
+        Title="Screen Translator" Height="450" Width="450">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -36,7 +36,33 @@
 
         <Border Grid.Row="1"
                 Padding="15">
-            
+            <StackPanel HorizontalAlignment="Left">
+                <StackPanel Margin="0,0,0,5">
+                    <TextBlock Text="Translate from:" 
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,5"/>
+
+                    <ComboBox FontSize="16"
+                              ItemsSource="{Binding SourceLanguages}"
+                              SelectedItem="{Binding SelectedSourceLanguage}"
+                              Width="300"/>
+                </StackPanel>
+
+                <StackPanel Margin="0,0,0,5">
+                    <TextBlock Text="Translate from:" 
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,5"/>
+
+                    <ComboBox FontSize="16"
+                      ItemsSource="{Binding TargetLanguages}"
+                      SelectedItem="{Binding SelectedTargetLanguage}"
+                      Width="300"/>
+                </StackPanel>
+
+
+            </StackPanel>
         </Border>
     </Grid>
 </Window>
