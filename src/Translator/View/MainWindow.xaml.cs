@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Translator
+namespace Translator.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
