@@ -5,8 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Translator"
         mc:Ignorable="d"
-        ResizeMode="NoResize"
-        Title="Screen Translator" Height="450" Width="450">
+        Title="Screen Translator" Height="450" Width="375">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -61,7 +60,18 @@
                       Width="300"/>
                 </StackPanel>
 
-
+                <StackPanel Margin="0,0,0,25">
+                    <TextBlock Text="Hotkey:" 
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,5"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Assign" FontSize="16"/>
+                        <TextBox Width="160" Margin="8,0,0,0" 
+                                 IsReadOnly="True" Text="(non assigned)" 
+                                 TextAlignment="Center" FontSize="16"/>
+                    </StackPanel>
+                </StackPanel>
             </StackPanel>
         </Border>
     </Grid>
