@@ -21,7 +21,7 @@ namespace Translator.View
 
         public void AssignButton_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new HotkeyDialog { Owner=this};
+            var dialog = new HotkeyDialog { Owner=this };
             if (dialog.ShowDialog() == true)
             {
                 _viewModel.Hotkey = FormatHotkey(dialog.Modifiers, dialog.Key);
@@ -50,7 +50,19 @@ namespace Translator.View
 
         private void OnHotkeyPressed(object sender, EventArgs e)
         {
-            MessageBox.Show("Горячая клавиша нажата!");
+            var dialog = new ScreenCaptureOverlay { Owner = this };
+            if (dialog.ShowDialog() == true)
+            {
+                var translatedText = Task.Run(async () =>
+                {
+                    return await _viewModel.TranslateFromBitmapAsync(dialog.CapturedBitmap);
+                }).GetAwaiter().GetResult();
+
+                if (translatedText == null) return;
+
+                var window = new TranslationWindow(translatedText);
+                window.Show();
+            }
         }
 
         private string FormatHotkey(ModifierKeys modifiers, Key key)
