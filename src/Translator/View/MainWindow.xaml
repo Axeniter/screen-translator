@@ -70,7 +70,9 @@
                     <StackPanel Orientation="Horizontal">
                         <Button Content="Assign" FontSize="16" Click="AssignButton_Click" Width="100"/>
                         <TextBox Width="160" Margin="8,0,0,0" 
-                                 IsReadOnly="True" Text="{Binding Hotkey}" 
+                                 IsReadOnly="True"
+                                 x:Name="HotkeyBox"
+                                 Text="not assigned"
                                  TextAlignment="Center" FontSize="16"/>
                     </StackPanel>
                 </StackPanel>

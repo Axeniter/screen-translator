@@ -25,7 +25,7 @@ namespace Translator.View
             var dialog = new HotkeyDialog { Owner=this };
             if (dialog.ShowDialog() == true)
             {
-                _viewModel.Hotkey = FormatHotkey(dialog.Modifiers, dialog.Key);
+                HotkeyBox.Text = FormatHotkey(dialog.Modifiers, dialog.Key);
 
                 RegisterGlobalHotkey(dialog.Modifiers, dialog.Key);
             }

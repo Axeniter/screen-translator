@@ -20,7 +20,6 @@ namespace Translator.ViewModel
 
         private string? _selectedSourceLanguage = null;
         private string? _selectedTargetLanguage = null;
-        private string? _hotkey = "not assigned";
 
         /// <summary>
         /// Collection of source languages available for OCR
@@ -64,18 +63,6 @@ namespace Translator.ViewModel
         {
             get => _selectedTargetLanguage;
             set => this.RaiseAndSetIfChanged(ref _selectedTargetLanguage, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the current hotkey configuration as string
-        /// </summary>
-        /// <value>
-        /// String representation of the hotkey, or "not assigned" if no hotkey is configured
-        /// </value>
-        public string? Hotkey
-        {
-            get => _hotkey;
-            set => this.RaiseAndSetIfChanged(ref _hotkey, value);
         }
 
         private void SetSourceLanguageWithCheck(string? language)
