@@ -8,15 +8,6 @@ namespace Translator.Service
     {
         private readonly string _tessDataPath;
         private readonly HttpClient _http = new();
-        private readonly Dictionary<string, string> _languages = new()
-        {
-            ["English"] = "eng",
-            ["Russian"] = "rus",
-            ["Japanse"] = "jpn",
-            ["Chinese Simplified"] = "chi_sim",
-            ["Chinese Traditional"] = "chi_tra"
-
-        };
         public OcrLanguageManager() 
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -27,12 +18,20 @@ namespace Translator.Service
         }
         public async Task<bool> InstallLanguageAsync(string language, CancellationToken cancellationToken = default)
         {
-            if (!_languages.TryGetValue(language, out var languageCode)) throw new ArgumentException();
-            if (IsLanguageInstalled(language)) return true;
+            string languageCode;
+            try
+            {
+                languageCode = LanguageService.GetOcrLanguageCode(language);
+            }
+            catch
+            {
+                return false;
+            }
+
+            if (IsLanguageInstalled(language)) throw new InvalidOperationException("Language already installed");
 
             var fileName = $"{languageCode}.traineddata";
             var filePath = Path.Combine(_tessDataPath, fileName);
-
             var tempFilePath = $"{filePath}.temp";
 
             try
@@ -72,22 +71,27 @@ namespace Translator.Service
 
         public bool IsLanguageInstalled(string language)
         {
-            if (!_languages.ContainsKey(language)) return false;
-            var languageCode = _languages[language];
-            var file = Path.Combine(_tessDataPath, $"{languageCode}.traineddata");
-            return File.Exists(file);
+            try
+            {
+                var languageCode = LanguageService.GetOcrLanguageCode(language);
+                var file = Path.Combine(_tessDataPath, $"{languageCode}.traineddata");
+                return File.Exists(file);
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public bool DeleteLanguage(string language)
         {
-            if (!_languages.TryGetValue(language, out var languageCode)) throw new ArgumentException();
-            if (!IsLanguageInstalled(language)) return true;
-
-            var fileName = $"{languageCode}.traineddata";
-            var filePath = Path.Combine(_tessDataPath, fileName);
+            if (!IsLanguageInstalled(language)) throw new InvalidOperationException("Language not installed");
 
             try
             {
+                var languageCode = LanguageService.GetOcrLanguageCode(language);
+                var fileName = $"{languageCode}.traineddata";
+                var filePath = Path.Combine(_tessDataPath, fileName);
                 File.Delete(filePath);
                 return true;
             }
@@ -98,27 +102,19 @@ namespace Translator.Service
             
         }
 
-        public string GetLanguageCode(string language)
-        {
-            return _languages[language];
-        }
-
         public List<OcrLanguage> GetAllLanguagesInfo()
         {
             var result = new List<OcrLanguage>();
 
-            foreach (var lang in _languages)
+            foreach (var lang in LanguageService.GetAllOcrLanguages())
             {
-                result.Add(new OcrLanguage { Code=lang.Value, Name=lang.Key, IsInstalled=IsLanguageInstalled(lang.Key) });
+                result.Add(new OcrLanguage 
+                { 
+                    Code=LanguageService.GetOcrLanguageCode(lang), 
+                    Name=lang, 
+                    IsInstalled=IsLanguageInstalled(lang) 
+                });
             }
-            return result;
-        }
-
-        public List<string> GetAllLanguagesNames()
-        {
-            var result = new List<string>();
-
-            foreach (var lang in _languages.Keys) result.Add(lang);
             return result;
         }
     }
