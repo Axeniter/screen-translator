@@ -14,16 +14,15 @@ namespace Translator.ViewModel
 
         private string? _selectedSourceLanguage = null;
         private string? _selectedTargetLanguage = null;
-        private string? _hotkey = "non assigned";
+        private string? _hotkey = "not assigned";
 
         public ObservableCollection<string> SourceLanguages { get; } = new(LanguageService.GetAllOcrLanguages());
         public ObservableCollection<string> TargetLanguages { get; } = new(LanguageService.GetAllTranslationLanguages());
 
-
         public string? SelectedSourceLanguage
         {
             get => _selectedSourceLanguage;
-            set => this.RaiseAndSetIfChanged(ref _selectedSourceLanguage, value);
+            set => SetSourceLanguageWithCheck(value);
         }
 
         public string? SelectedTargetLanguage
@@ -38,23 +37,71 @@ namespace Translator.ViewModel
             set => this.RaiseAndSetIfChanged(ref _hotkey, value);
         }
 
+        private void SetSourceLanguageWithCheck(string? language)
+        {
+            if (language == null)
+            {
+                this.RaiseAndSetIfChanged(ref _selectedSourceLanguage, null);
+                return;
+            }
+
+            if (!_ocrLanguageManager.IsLanguageInstalled(language))
+            {
+                var result = MessageBox.Show(
+                    $"Language '{language}' is not installed. Install now?",
+                    "Language Installation",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question
+                );
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    InstallLanguageAsync(language);
+                    this.RaiseAndSetIfChanged(ref _selectedSourceLanguage, language);
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                this.RaiseAndSetIfChanged(ref _selectedSourceLanguage, language);
+            }
+        }
+
+        private async void InstallLanguageAsync(string language)
+        {
+            try
+            {
+                await _ocrLanguageManager.InstallLanguageAsync(language);
+                MessageBox.Show($"{language} installed successfully!", "Success",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to install {language}: {ex.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                this.RaiseAndSetIfChanged(ref _selectedSourceLanguage, null, nameof(SelectedSourceLanguage));
+            }
+        }
+
         public async Task<string?> TranslateFromBitmapAsync(Bitmap bitmap)
         {
-            if (SelectedSourceLanguage == null) return null;
-            if (SelectedTargetLanguage == null) return null;
-            if (bitmap == null) throw new ArgumentNullException();
-            if (!_ocrLanguageManager.IsLanguageInstalled(SelectedSourceLanguage))
+            if (SelectedSourceLanguage == null ||
+                SelectedTargetLanguage == null ||
+                bitmap == null ||
+                !_ocrLanguageManager.IsLanguageInstalled(SelectedSourceLanguage))
             {
-                MessageBox.Show("Language not installed");
+                return null;
             }
 
             var sourceText = _ocrService.RecognizeImage(bitmap, SelectedSourceLanguage);
 
-            if (string.IsNullOrEmpty(sourceText)) return null;
+            if (string.IsNullOrEmpty(sourceText))
+                return null;
 
-            var translation = await _translationService.TranslateTextAsync(sourceText, SelectedTargetLanguage);
-
-            return translation;
+            return await _translationService.TranslateTextAsync(sourceText, SelectedTargetLanguage);
         }
     }
 }

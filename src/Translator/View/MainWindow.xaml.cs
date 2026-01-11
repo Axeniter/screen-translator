@@ -58,7 +58,7 @@ namespace Translator.View
                     return await _viewModel.TranslateFromBitmapAsync(dialog.CapturedBitmap);
                 }).GetAwaiter().GetResult();
 
-                if (translatedText == null) return;
+                if (string.IsNullOrEmpty(translatedText)) return;
 
                 var window = new TranslationWindow(translatedText);
                 window.Show();
