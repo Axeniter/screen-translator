@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Translator"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Screen Translator" Height="400" Width="375">
+        Title="Screen Translator" Height="335" Width="375">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -50,7 +50,7 @@
                 </StackPanel>
 
                 <StackPanel Margin="0,0,0,5">
-                    <TextBlock Text="Translate from:" 
+                    <TextBlock Text="Translate to:" 
                        FontSize="16"
                        FontWeight="SemiBold"
                        Margin="0,0,0,5"/>
