@@ -3,10 +3,24 @@ using System.Net.Http;
 
 namespace Translator.Service
 {
+    /// <summary>
+    /// Manages the installation, removal, and status checking of Tesseract OCR language data files
+    /// </summary>
+    /// <remarks>
+    /// This class downloads language training data files from Tesseract GitHub repository
+    /// and manages them in the local application data directory
+    /// </remarks>
     public class OcrLanguageManager
     {
         private readonly string _tessDataPath;
         private readonly HttpClient _http = new();
+
+        /// <summary>
+        /// Initializes a new instance of the OcrLanguageManager class
+        /// </summary>
+        /// <remarks>
+        /// Creates the tessdata directory in the LocalApplicationData folder if it doesn't exist
+        /// </remarks>
         public OcrLanguageManager() 
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -15,6 +29,19 @@ namespace Translator.Service
             if (!Directory.Exists(_tessDataPath))
                 Directory.CreateDirectory(_tessDataPath);
         }
+
+        /// <summary>
+        /// Downloads and installs the specified language's OCR training data file
+        /// </summary>
+        /// <param name="language">The display name of the language to install ("English", "Russian")</param>
+        /// <param name="cancellationToken">A token to cancel the asynchronous operation</param>
+        /// <returns>
+        /// true if the language was successfully installed and false if installation failed
+        /// </returns>
+        /// <remarks>
+        /// Downloads the .traineddata file from the Tesseract GitHub repository.
+        /// Uses temporary files and error recovery mechanisms to ensure data integrity.
+        /// </remarks>
         public async Task<bool> InstallLanguageAsync(string language, CancellationToken cancellationToken = default)
         {
             string languageCode;
@@ -91,6 +118,7 @@ namespace Translator.Service
                 return false;
             }
         }
+
         private async Task SafeDeleteFile(string filePath)
         {
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
@@ -109,6 +137,12 @@ namespace Translator.Service
                 }
             }
         }
+
+        /// <summary>
+        /// Checks whether the specified language's OCR training data is installed locally
+        /// </summary>
+        /// <param name="language">The display name of the language to check ("English", "Russian")</param>
+        /// <returns>true if the language is installed and false otherwise</returns>
         public bool IsLanguageInstalled(string language)
         {
             try
@@ -123,6 +157,11 @@ namespace Translator.Service
             }
         }
 
+        /// <summary>
+        /// Deletes the specified language's OCR training data file from the local system
+        /// </summary>
+        /// <param name="language">The display name of the language to remove ("English", "Russian")</param>
+        /// <returns>true if the language was successfully deleted and false otherwise</returns>
         public bool DeleteLanguage(string language)
         {
             if (!IsLanguageInstalled(language)) throw new InvalidOperationException("Language not installed");
@@ -142,6 +181,10 @@ namespace Translator.Service
             
         }
 
+        /// <summary>
+        /// Retrieves a list of all OCR languages that are currently installed locally
+        /// </summary>
+        /// <returns>A list of display language names that are installed</returns>
         public List<string> GetAllInstalledLanguages()
         {
             var result = new List<string>();

@@ -10,6 +10,12 @@ using System.Windows.Interop;
 
 namespace Translator.View
 {
+    /// <summary>
+    /// Represents an overlay window for capturing screen regions
+    /// </summary>
+    /// <remarks>
+    /// Window allows users to select a rectangular area for screen capture
+    /// </remarks>
     public partial class ScreenCaptureOverlay : Window
     {
         private Point _startPoint;
@@ -17,7 +23,7 @@ namespace Translator.View
         private System.Windows.Shapes.Rectangle _selectionRect;
         private Rectangle _selectedArea;
 
-        public Bitmap CapturedBitmap { get; set; }
+        public Bitmap CapturedBitmap { get; private set; }
 
         public ScreenCaptureOverlay()
         {

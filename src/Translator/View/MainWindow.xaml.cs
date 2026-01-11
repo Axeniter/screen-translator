@@ -6,12 +6,13 @@ using Translator.ViewModel;
 namespace Translator.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Represents the main application window for the Translator application
     /// </summary>
     public partial class MainWindow : Window
     {
         private readonly MainWindowViewModel _viewModel;
         private GlobalHotkey? _hotkey;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -19,7 +20,7 @@ namespace Translator.View
             DataContext = _viewModel;
         }
 
-        public void AssignButton_Click(object sender, RoutedEventArgs e)
+        private void AssignButton_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new HotkeyDialog { Owner=this };
             if (dialog.ShowDialog() == true)
@@ -75,6 +76,7 @@ namespace Translator.View
             text += key.ToString();
             return text;
         }
+
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);

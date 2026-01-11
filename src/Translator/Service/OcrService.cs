@@ -4,17 +4,39 @@ using Tesseract;
 
 namespace Translator.Service
 {
+    /// <summary>
+    /// Provides OCR operations using Tesseract engine
+    /// </summary>
     public class OcrService : IDisposable
     {
         private readonly string _tessDataPath;
         private readonly Dictionary<string, TesseractEngine> _engines = new();
 
+        /// <summary>
+        /// Initializes a new instance of the OcrService class
+        /// </summary>
+        /// <remarks>
+        /// Ensures the tessdata directory exists in the LocalApplicationData folder
+        /// </remarks>
         public OcrService()
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             _tessDataPath = Path.Combine(appData, "Translator", "tessdata");
             if (!Directory.Exists(_tessDataPath)) Directory.CreateDirectory(_tessDataPath);
         }
+
+        /// <summary>
+        /// Recognizes text in the bitmap image using the given language
+        /// </summary>
+        /// <param name="image">The bitmap image containing text to recognize</param>
+        /// <param name="language">The display name of the language to use for OCR ("English", "Russian")</param>
+        /// <returns>
+        /// Recognized text as a string, or null if recognition failed or the language is not supported
+        /// </returns>
+        /// <remarks>
+        /// Creates and caches Tesseract engine instances for each language to improve performance
+        /// on subsequent recognitions with the same language
+        /// </remarks>
         public string? RecognizeImage(Bitmap image, string language)
         {
             string languageCode;

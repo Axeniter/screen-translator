@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Translator"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
+        Icon="\Assets\icon.ico"
         Title="Screen Translator" Height="335" Width="375">
     <Grid>
         <Grid.RowDefinitions>
