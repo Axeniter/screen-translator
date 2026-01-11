@@ -1,10 +1,12 @@
-﻿using System.Windows;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Translator.Model;
 using Brushes = System.Windows.Media.Brushes;
 using Point = System.Windows.Point;
+using System.Windows.Interop;
 
 namespace Translator.View
 {
@@ -20,6 +22,11 @@ namespace Translator.View
         public ScreenCaptureOverlay()
         {
             InitializeComponent();
+            Left = 0;
+            Top = 0;
+            Width = SystemParameters.VirtualScreenWidth;
+            Height = SystemParameters.VirtualScreenHeight;
+
             Mouse.OverrideCursor = Cursors.Cross;
         }
 
@@ -34,7 +41,7 @@ namespace Translator.View
                 {
                     Stroke = Brushes.Red,
                     StrokeThickness = 2,
-                    Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(40, 175, 0, 0))
+                    Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(20, 125, 0, 0))
                 };
 
                 Canvas.SetLeft(_selectionRect, _startPoint.X);
@@ -75,7 +82,6 @@ namespace Translator.View
             double width = Math.Abs(endPoint.X - _startPoint.X);
             double height = Math.Abs(endPoint.Y - _startPoint.Y);
 
-
             if (width < 10 || height < 10)
             {
                 MessageBox.Show("Selection area must be at least 10x10 pixels");
@@ -83,19 +89,33 @@ namespace Translator.View
                 return;
             }
 
-            var screenLeft = SystemParameters.VirtualScreenLeft;
-            var screenTop = SystemParameters.VirtualScreenTop;
-            var screenWidth = SystemParameters.VirtualScreenWidth;
-            var screenHeight = SystemParameters.VirtualScreenHeight;
+            double dpiScaleX = 1.0;
+            double dpiScaleY = 1.0;
 
-            var scaleX = screenWidth / this.ActualWidth;
-            var scaleY = screenHeight / this.ActualHeight;
+            try
+            {
+                var hwnd = new WindowInteropHelper(this).Handle;
+                var dpi = DpiHelper.GetDpi(hwnd);
+                dpiScaleX = dpi.X / 96.0;
+                dpiScaleY = dpi.Y / 96.0;
+            }
+            catch
+            {
+                dpiScaleX = 1.0;
+                dpiScaleY = 1.0;
+            }
+
+
+            var screenLeft = Left + left * dpiScaleX;
+            var screenTop = Top + top * dpiScaleY;
+            var screenWidth = width * dpiScaleX;
+            var screenHeight = height * dpiScaleY;
 
             _selectedArea = new Rectangle(
-                (int)((left + screenLeft) * scaleX),
-                (int)((top + screenTop) * scaleY),
-                (int)(width * scaleX),
-                (int)(height * scaleY)
+                (int)Math.Round(screenLeft),
+                (int)Math.Round(screenTop),
+                (int)Math.Round(screenWidth),
+                (int)Math.Round(screenHeight)
             );
 
             try
