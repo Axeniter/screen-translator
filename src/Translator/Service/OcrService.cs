@@ -15,8 +15,18 @@ namespace Translator.Service
             _tessDataPath = Path.Combine(appData, "Translator", "tessdata");
             if (!Directory.Exists(_tessDataPath)) Directory.CreateDirectory(_tessDataPath);
         }
-        public string RecognizeImage(Bitmap image, string languageCode)
+        public string? RecognizeImage(Bitmap image, string language)
         {
+            string languageCode;
+            try
+            {
+                languageCode = LanguageService.GetOcrLanguageCode(language);
+            }
+            catch
+            {
+                return null;
+            }
+
             if (!_engines.ContainsKey(languageCode))
             {
                 var engine = new TesseractEngine(_tessDataPath, languageCode, EngineMode.Default);
@@ -26,7 +36,9 @@ namespace Translator.Service
             using (var pix = PixConverter.ToPix(image))
             using (var page = _engines[languageCode].Process(pix))
             {
-                return page.GetText();
+                var result = page.GetText();
+                if (string.IsNullOrEmpty(result)) return null;
+                return result;
             }
         }
 
