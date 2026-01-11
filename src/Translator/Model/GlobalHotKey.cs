@@ -5,6 +5,9 @@ using System.Windows.Interop;
 
 namespace Translator.Model
 {
+    /// <summary>
+    /// Registers a global system-wide hotkey that works even when the application is not in focus
+    /// </summary>
     public class GlobalHotkey : IDisposable
     {
         private const int WM_HOTKEY = 0x0312;
@@ -16,6 +19,9 @@ namespace Translator.Model
         private int _id;
         private bool _registered;
 
+        /// <summary>
+        /// Event that is raised when hotkey is pressed
+        /// </summary>
         public event EventHandler? Pressed;
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -24,6 +30,12 @@ namespace Translator.Model
         [DllImport("user32.dll", SetLastError = true)]
         private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
+        /// <summary>
+        /// Initializes new instance of the GlobalHotkey class and registers hotkey
+        /// </summary>
+        /// <param name="modifiers">Modifier keys (Alt, Ctrl, Shift, Windows) to combine with the key</param>
+        /// <param name="key">Primary key of hotkey combination</param>
+        /// <param name="window">Window that will receive the hotkey notifications</param>
         public GlobalHotkey(ModifierKeys modifiers, Key key, Window window)
         {
             var helper = new WindowInteropHelper(window);
