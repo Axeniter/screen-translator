@@ -7,13 +7,14 @@
         Topmost="True"
         ShowInTaskbar="False"
         WindowState="Maximized"
+        ResizeMode="NoResize"
         MouseDown="Window_MouseDown"
         MouseMove="Window_MouseMove"
         MouseUp="Window_MouseUp"
         KeyDown="Window_KeyDown">
 
     <Grid>
-        <Rectangle Fill="#80000000"/>
+        <Rectangle Fill="#40000000"/>
 
         <Canvas x:Name="SelectionCanvas"/>
     </Grid>
