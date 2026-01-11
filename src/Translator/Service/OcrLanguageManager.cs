@@ -102,18 +102,13 @@ namespace Translator.Service
             
         }
 
-        public List<OcrLanguage> GetAllLanguagesInfo()
+        public List<string> GetAllInstalledLanguages()
         {
-            var result = new List<OcrLanguage>();
+            var result = new List<string>();
 
             foreach (var lang in LanguageService.GetAllOcrLanguages())
             {
-                result.Add(new OcrLanguage 
-                { 
-                    Code=LanguageService.GetOcrLanguageCode(lang), 
-                    Name=lang, 
-                    IsInstalled=IsLanguageInstalled(lang) 
-                });
+                if (IsLanguageInstalled(lang)) result.Add(lang);
             }
             return result;
         }

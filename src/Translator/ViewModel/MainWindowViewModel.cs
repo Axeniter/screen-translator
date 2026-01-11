@@ -21,7 +21,7 @@ namespace Translator.ViewModel
 
 
         public string? SelectedSourceLanguage
-        { 
+        {
             get => _selectedSourceLanguage;
             set => this.RaiseAndSetIfChanged(ref _selectedSourceLanguage, value);
         }
@@ -56,6 +56,5 @@ namespace Translator.ViewModel
 
             return translation;
         }
-
     }
 }
