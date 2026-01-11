@@ -6,6 +6,12 @@ using Translator.Service;
 
 namespace Translator.ViewModel
 {
+    /// <summary>
+    /// ViewModel for the main application window, providing data and operations for OCR and translation
+    /// </summary>
+    /// <remarks>
+    /// Manages language selection and hotkey display
+    /// </remarks>
     public class MainWindowViewModel : ReactiveObject
     {
         private readonly OcrService _ocrService = new();
@@ -16,21 +22,56 @@ namespace Translator.ViewModel
         private string? _selectedTargetLanguage = null;
         private string? _hotkey = "not assigned";
 
+        /// <summary>
+        /// Collection of source languages available for OCR
+        /// </summary>
+        /// <value>
+        /// Observable collection containing display names of all supported OCR languages
+        /// </value>
         public ObservableCollection<string> SourceLanguages { get; } = new(LanguageService.GetAllOcrLanguages());
+
+        /// <summary>
+        /// Collection of target languages available for translation
+        /// </summary>
+        /// <value>
+        /// Observable collection containing display names of all supported translation languages
+        /// </value>
         public ObservableCollection<string> TargetLanguages { get; } = new(LanguageService.GetAllTranslationLanguages());
 
+        /// <summary>
+        /// Gets or sets the currently selected source language for OCR
+        /// </summary>
+        /// <value>
+        /// The display name of the selected source language, or null if no language is selected
+        /// </value>
+        /// <remarks>
+        /// When setting a new language, automatically checks if the language is installed
+        /// and prompts for installation if needed
+        /// </remarks>
         public string? SelectedSourceLanguage
         {
             get => _selectedSourceLanguage;
             set => SetSourceLanguageWithCheck(value);
         }
 
+        /// <summary>
+        /// Gets or sets the currently selected target language for translation
+        /// </summary>
+        /// <value>
+        /// The display name of the selected target language, or null if no language is selected
+        /// </value>
         public string? SelectedTargetLanguage
         {
             get => _selectedTargetLanguage;
             set => this.RaiseAndSetIfChanged(ref _selectedTargetLanguage, value);
         }
 
+        /// <summary>
+        /// Gets or sets the current hotkey configuration as string
+        /// </summary>
+        /// <value>
+        /// String representation of the hotkey, or "not assigned" if no hotkey is configured
+        /// </value>
         public string? Hotkey
         {
             get => _hotkey;
@@ -86,6 +127,20 @@ namespace Translator.ViewModel
             }
         }
 
+        /// <summary>
+        /// Performs OCR on a bitmap image and translates the recognized text
+        /// </summary>
+        /// <param name="bitmap">Bitmap image containing text to recognize and translate</param>
+        /// <returns>
+        /// Task result contains translated text, or null if any step in the process fails
+        /// </returns>
+        /// <remarks>
+        /// This method performs the following steps:
+        /// 1. Validates that source and target languages are selected
+        /// 2. Verifies the source language is installed
+        /// 3. Performs OCR on the bitmap using the selected source language
+        /// 4. Translates the recognized text to the selected target language
+        /// </remarks>
         public async Task<string?> TranslateFromBitmapAsync(Bitmap bitmap)
         {
             if (SelectedSourceLanguage == null ||

@@ -3,7 +3,7 @@
 namespace Translator.View
 {
     /// <summary>
-    /// Interaction logic for TranslationWindow.xaml
+    /// Represents a window that displays translated text to the user
     /// </summary>
     public partial class TranslationWindow : Window
     {

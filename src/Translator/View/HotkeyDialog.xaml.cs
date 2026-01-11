@@ -3,6 +3,13 @@ using System.Windows.Input;
 
 namespace Translator.View
 {
+    /// <summary>
+    /// Represents a dialog window for capturing global hotkey combinations
+    /// </summary>
+    /// <remarks>
+    /// Dialog captures key combinations including modifier keys (Ctrl, Alt, Shift, Win)
+    /// and displays them to the user
+    /// </remarks>
     public partial class HotkeyDialog : Window
     {
         public ModifierKeys Modifiers { get; private set; }
