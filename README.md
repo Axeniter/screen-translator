@@ -17,7 +17,7 @@ git clone https://github.com/Axeniter/screen-translator.git
 Сборка:
 - Открыть решение src/Translator.sln в Visual Studio
 - Запустить сборку
-### Готовое приложения
+### Готовое приложение
 Чтобы скачать последнюю версию приложения, перейдите во вкладку Releases: https://github.com/Axeniter/screen-translator/releases и скачайте WindowsBuild.rar. После распаковки в папке будет exe файл для запуска.
 ## Как пользоваться
 ### Настройки
