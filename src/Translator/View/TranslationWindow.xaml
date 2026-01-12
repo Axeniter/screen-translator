@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         WindowStyle="ToolWindow"
         WindowStartupLocation="CenterScreen"
+        Icon="\Assets\icon.ico"
         Title="Translation" Height="300" Width="400">
     <ScrollViewer Padding="10">
         <TextBlock x:Name="TranslatedText"

@@ -73,16 +73,16 @@ Translator/
 Сервис для работы с OCR.
 
 Конструктор:
-`OcrService()` - создает экземпляр сервиса. Проверяет наличие директории с данными для распознавания.
+- `OcrService()` - создает экземпляр сервиса. Проверяет наличие директории с данными для распознавания.
 
 Методы:
-`RecognizeImage(Bitmap image, string language)` - распознает текст установленного языка на данном изображении и возвращает его в виде строки. Если текст не найден возвращает null.
+- `RecognizeImage(Bitmap image, string language)` - распознает текст установленного языка на данном изображении и возвращает его в виде строки. Если текст не найден возвращает null.
 #### TranslationService.cs
 Сервис для перевода текста с помощью Google Translate.
 
 Методы:
 - `TranslateTextAsync(string text, string language)` - асинхронный метод, отправляющий запрос перевода в Google Translate с помощью библиотеки GTranslate. Возвращает переведенный текст.
-### ViewModel
+### ViewModel/
 #### MainWindowViewModel.cs
 Модель вида для главного окна приложения.
 
@@ -95,7 +95,7 @@ Translator/
 Методы:
 - `TranslateFromBitmapAsync(Bitmap bitmap)` - асинхронный метод, выполняющий все нужные процедуры и возвращающий перевод в виде строки, либо возвращает null если какая-либо из процедур не смогла выполниться.
 
-### View
+### View/
 #### HotkeyDialog.xaml/HotkeyDialog.xaml.cs
 Диалоговое окно для установки сочетания клавиш/горячей клавиши.
 #### MainWindow.xaml/MainWindow.xaml.cs
